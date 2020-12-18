@@ -112,7 +112,7 @@ module.exports = {
                 `<:Error:665142091906809877> **Arguments must be a number.**`
               );
             const songInfo = await ytdl.getBasicInfo(
-              results[videoIndex - 1].link.split("?v=")[1]
+              results[videoIndex - 1].url.split("?v=")[1]
             );
             return await module.exports.queueSong(songInfo, message);
           });
