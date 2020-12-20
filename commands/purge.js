@@ -26,53 +26,42 @@ module.exports = {
         .MANAGE_MESSAGES
     )
       return noBotPerms("Manage Messages", message.channel);
-    const num = parseInt(args[0]);
-    let rounded = Math.floor(num / 100) * 100;
-    const diff = num - rounded;
-    if (isNaN(num))
+    const targetCount = parseInt(args[0]);
+    if (isNaN(targetCount))
       return message.channel.send(`${x} **Arguments must be a number.**`);
-    if (num > 1000 || num < 1)
+    if (targetCount > 1000 || targetCount < 2)
       return message.channel.send(
-        `${x} **Please use a value that's between 1 and 1000.**`
+        `${x} **Please use a value that's between 2 and 1000.**`
       );
-    let deletedMsgs = [];
-    let notPinneda = [];
-    const notify = await message.channel.send(
-      `${loading} Deleting Messages...`
+    const notifyMsg = await message.channel.send(
+      `${loading} Deleting messages...`
     );
-    const fetcheda = await message.channel.messages.fetch({
-      limit: diff,
-      before: message.id
-    });
-    fetcheda.forEach(m => {
-      if (!m.pinned) notPinneda.push(m);
-    });
-    notify;
-    const deleted = await message.channel.bulkDelete(notPinneda, {
-      filterOld: true
-    });
-    await deleted.tap(m => deletedMsgs.push(m));
-    while (rounded > 0) {
-      let notPinned = [];
-      const fetched = await message.channel.messages.fetch({
-        limit: 100,
-        before: message.id
+    const deathRow = [];
+    while (targetCount - deathRow.length > 0) {
+      const fetchedMsgs = await message.channel.messages.fetch({
+        limit:
+          targetCount - deathRow.length > 100
+            ? 100
+            : targetCount - deathRow.length,
+        before: deathRow[deathRow.length - 1]?.id || message.id
       });
-      fetched.forEach(m => {
-        if (!m.pinned) notPinned.push(m);
-      });
-      const deleted = await message.channel.bulkDelete(notPinned, {
-        filterOld: true
-      });
-      await deleted.tap(m => deletedMsgs.push(m));
-      rounded -= 100;
+      if (fetchedMsgs.size === 0) break;
+      deathRow.push(...fetchedMsgs.array());
     }
-    if (!deletedMsgs.length)
-      notify.edit(
+    const finalDeathRow = deathRow.filter(
+      x => !x.pinned && x.createdTimestamp > Date.now() - 1209600000
+    );
+    if (finalDeathRow.size === 0)
+      return notifyMsg.edit(
         `${x} No messages found to delete.\nNote: Messages older than 2 weeks cannot be deleted.`
       );
-    else if (deletedMsgs.length === 1) notify.edit(`${check} Deleted 1 message.`);
-    else if (deletedMsgs.length > 1)
-      notify.edit(`${check} Deleted ${deletedMsgs.length} messages.`);
+    let executeGroups = [];
+    for (let i = 0; i < finalDeathRow.length - 1; i += 100) {
+      executeGroups.push(finalDeathRow.slice(i, i + 100));
+    }
+    for (const group of executeGroups) {
+      await message.channel.bulkDelete(group);
+    }
+    notifyMsg.edit(`${check} Deleted \`${finalDeathRow.length}\` messages.`);
   }
 };
