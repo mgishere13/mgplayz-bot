@@ -13,12 +13,12 @@
 ## Hosting
 (read the LICENSE file before proceeding)
 * Requirements:
-  * Node v12 and above (required for voice support)
+  * Atleast Node v12 and above (required for voice support)
   * pnpm version 5 (most-efficient) [or npm version 7 if you want]
   * git
   * nano
-  * Atleast 90MB of free memory
-  * Atleast 640MB of free disk space
+  * Atleast 100MB of free memory
+  * Atleast 500B of free disk space
   
 * Step 1: Clone the repository
 ```
@@ -37,11 +37,7 @@ mv config.js.example config.js
 ```
 BOT_TOKEN=<put your bot token here>
 ```
-* Step 5: 
-```
-nano .env
-```
-* Step 6: Start the installation process
+* Step 5: Start the installation process
    - pnpm:
    ```
    pnpm install package.json
@@ -51,7 +47,7 @@ nano .env
    npm install package.json
    ```
 
-* Step 7: Start the bot
+* Step 6: Start the bot
 ```
 node index.js
 ```
