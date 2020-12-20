@@ -13,7 +13,7 @@
 ## Hosting
 (read the LICENSE file before proceeding)
 * Requirements:
-  * Atleast Node v12 and above (required for voice support)
+  * Node v14 and above (required for voice support)
   * pnpm version 5 (most-efficient) [or npm version 7 if you want]
   * git
   * nano
