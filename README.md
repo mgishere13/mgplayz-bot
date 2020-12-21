@@ -14,7 +14,7 @@
 (read the LICENSE file before proceeding)
 * Requirements:
   * Node v14 and above (required for voice support)
-  * pnpm version 5 (most-efficient) [or npm version 7 if you want]
+  * pnpm version 5 (most-efficient) [or npm version 6 if you want]
   * git
   * nano
   * Atleast 100MB of free memory
