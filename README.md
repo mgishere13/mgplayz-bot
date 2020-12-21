@@ -18,7 +18,7 @@
   * git
   * nano
   * Atleast 100MB of free memory
-  * Atleast 500B of free disk space
+  * Atleast 500MB of free disk space
   
 * Step 1: Clone the repository
 ```
