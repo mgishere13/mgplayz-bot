@@ -207,9 +207,8 @@ module.exports = {
           if (serverQueue.looping !== "song") {
             if (serverQueue.looping === "queue")
               serverQueue.songs.push(serverQueue.songs[0]);
-            serverQueue.songs.shift();
+           else serverQueue.songs.shift();
           }
-          serverQueue.songs.shift();
           module.exports.play(message, serverQueue.songs[0]);
         }
       })
