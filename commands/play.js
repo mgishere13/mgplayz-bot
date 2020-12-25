@@ -155,7 +155,7 @@ module.exports = {
         playing: true,
         looping: false
       };
-
+      
       try {
         const connection = await channel.join();
         queueContruct.connection = connection;
@@ -202,15 +202,13 @@ module.exports = {
 
     const dispatcher = await serverQueue.connection
       .play(mainStream, { bitrate: "auto" })
-      .on("speaking", speaking => {
-        if (!speaking) {
-          if (serverQueue.looping !== "song") {
-            if (serverQueue.looping === "queue")
-              serverQueue.songs.push(serverQueue.songs[0]);
-           else serverQueue.songs.shift();
-          }
-          module.exports.play(message, serverQueue.songs[0]);
-        }
+      .on("finish", () => {
+         if (serverQueue.looping !== "song") {
+           if (serverQueue.looping === "queue")
+             serverQueue.songs.push(serverQueue.songs[0]);
+          else serverQueue.songs.shift();
+         }
+        module.exports.play(message, serverQueue.songs[0]);
       })
       .on("error", error => {
         console.error(error);
