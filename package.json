@@ -31,7 +31,6 @@
     "discord.js": "^12.5.0",
     "dotenv": "^8.2.0",
     "erlpack": "git://github.com/discord/erlpack.git",
-    "express": "^4.17.1",
     "ffmpeg-static": "^4.2.7",
     "gifencoder": "^2.0.1",
     "got": "^11.7.0",
@@ -46,8 +45,8 @@
     "serialize-javascript": "^5.0.1",
     "utf-8-validate": "^5.0.2",
     "ytdl-core": "^4.2.1",
-    "ytpl": "^2.0.3",
-    "ytsr": "^3.0.0",
+    "ytpl": "^2.0.4",
+    "ytsr": "^3.2.1",
     "zlib-sync": "^0.1.7"
   },
   "engines": {
