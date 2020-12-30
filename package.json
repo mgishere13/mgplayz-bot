@@ -1,10 +1,9 @@
 {
   "name": "mgplayz-bot",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "node index.js",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {},
   "keywords": [
