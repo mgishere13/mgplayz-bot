@@ -196,11 +196,20 @@ module.exports = {
 
     let mainStream = await ytdl(song.url, {
       filter: "audio",
-      requestOptions: { headers: { cookie: COOKIE }, maxRedirects: 4 },
-      bitrate: "auto"
+      dlChunkSize: 0,
+      quality: "highestaudio",
+      requestOptions: { headers: { 
+          cookie: COOKIE 
+        }, 
+          maxRedirects: 4, 
+          maxRetries: 3 
+        }
+    }).on("error", err => {
+       console.error(err);
+       serverQueue.voiceChannel.leave();
     });
 
-    const dispatcher = await serverQueue.connection
+    await serverQueue.connection
       .play(mainStream, { bitrate: "auto" })
       .on("finish", () => {
          if (serverQueue.looping !== "song") {
@@ -218,7 +227,7 @@ module.exports = {
           `${x} **Oops, an error occured while trying to execute that operation.**`
         );
       });
-    dispatcher.setVolume(serverQueue.volume / 100);
+     .setVolume(serverQueue.volume / 100);
     const videoEmbed = new MessageEmbed()
       .setThumbnail(song.thumbnail)
       .setColor("RANDOM")
