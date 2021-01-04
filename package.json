@@ -8,8 +8,6 @@
   "repository": {},
   "keywords": [
     "discord-bot",
-    "discord",
-    "mgplayz",
     "discord.js"
   ],
   "author": {
@@ -27,7 +25,7 @@
     "@discordjs/opus": "^0.3.2",
     "@keyv/sqlite": "^2.0.2",
     "bufferutil": "^4.0.2",
-    "discord.js": "^12.5.0",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "erlpack": "git://github.com/discord/erlpack.git",
     "ffmpeg-static": "^4.2.7",
@@ -42,8 +40,8 @@
     "parse-duration": "^0.4.3",
     "querystring": "^0.2.0",
     "serialize-javascript": "^5.0.1",
-    "utf-8-validate": "^5.0.2",
-    "ytdl-core": "^4.3.1",
+    "utf-8-validate": "^5.0.3",
+    "ytdl-core": "^4.4.0",
     "ytpl": "^2.0.4",
     "ytsr": "^3.2.1",
     "zlib-sync": "^0.1.7"
