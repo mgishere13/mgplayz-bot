@@ -11,15 +11,15 @@
 * [Latest] v1.0.0
 
 ## Before you begin (IMPORTANT)
-- Some packages require a package called `windows-build-tools` to work properly. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
+- Make sure you installed a package called `windows-build-tools`. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
 
 ## Hosting
 * Requirements:
   * Node v14 (required for voice support and optional chaining support)
-  * pnpm version 5 (most-efficient) [or npm version 6 if you want]
-  * git
+  * Latest version of npm
+  * Git
   * nano
-  * Atleast 100MB of free memory
+  * Atleast 120MB of free memory
   * Atleast 500MB of free disk space
   
 * Step 1: Clone the repository
@@ -40,18 +40,13 @@ mv config.js.example config.js
 BOT_TOKEN=<put your bot token here>
 ```
 * Step 5: Start the installation process
-   - pnpm:
-   ```
-   pnpm install package.json
-   ```
-   - npm:
    ```
    npm install package.json
    ```
 * Step 7: Start the bot
-```
-node index.js
-```
+   ```
+   node index.js
+   ```
 and you're done!
 
 ## License
