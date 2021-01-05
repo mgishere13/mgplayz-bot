@@ -194,22 +194,20 @@ module.exports = {
       return;
     }
 
-    let mainStream = await ytdl(song.url, {
+    let mainStream = ytdl(song.url, {
       filter: "audio",
       dlChunkSize: 0,
       quality: "highestaudio",
-      requestOptions: { headers: { 
-          cookie: COOKIE 
-        }, 
+      requestOptions: {
           maxRedirects: 4, 
           maxRetries: 3 
         }
-    }).on("error", err => {
+    }).on("error", (err) => {
        console.error(err);
        serverQueue.voiceChannel.leave();
     });
 
-    await serverQueue.connection
+    ServerQueue.connection
       .play(mainStream, { bitrate: "auto" })
       .on("finish", () => {
          if (serverQueue.looping !== "song") {
