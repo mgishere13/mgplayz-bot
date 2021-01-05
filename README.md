@@ -20,7 +20,7 @@
   * Atleast 500MB of free disk space
 
 * Before you begin (IMPORTANT)
-- Make sure you installed a package called `windows-build-tools`. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
+  - Make sure you installed a package called `windows-build-tools`. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
 
 * Step 1: Clone the repository
 ```
