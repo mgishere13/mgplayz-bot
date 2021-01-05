@@ -10,6 +10,9 @@
 ## Releases
 * [Latest] v1.0.0
 
+## Before you begin (IMPORTANT)
+- Some packages require a package called `windows-build-tools` to work properly. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
+
 ## Hosting
 * Requirements:
   * Node v14 (required for voice support and optional chaining support)
@@ -45,8 +48,6 @@ BOT_TOKEN=<put your bot token here>
    ```
    npm install package.json
    ```
-* Step 6: windows-build-tools
-  - Some packages require a package called `windows-build-tools` to work properly. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
 * Step 7: Start the bot
 ```
 node index.js
