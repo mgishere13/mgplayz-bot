@@ -10,9 +10,6 @@
 ## Releases
 * [Latest] v1.0.0
 
-## Before you begin (IMPORTANT)
-- Make sure you installed a package called `windows-build-tools`. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
-
 ## Hosting
 * Requirements:
   * Node v14 (required for voice support and optional chaining support)
@@ -21,7 +18,10 @@
   * nano
   * Atleast 120MB of free memory
   * Atleast 500MB of free disk space
-  
+
+* Before you begin (IMPORTANT)
+- Make sure you installed a package called `windows-build-tools`. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
+
 * Step 1: Clone the repository
 ```
 git clone https://github.com/MGPlayzYT/mgplayz-bot <custom folder name>
