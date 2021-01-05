@@ -1,6 +1,5 @@
 ## MGPlayz' Bot
 * A discord.js bot made by MGPlayzYT. Features a meme command, voice commands, and more!
-* [AGPL 3 License](https://raw.githubusercontent.com/MGPlayzYT/mgplayz-bot/main/LICENSE)
 
 ## Contributors
 * Thanks to the following people who made this project possible!
@@ -8,10 +7,9 @@
    * RandomPerson3465
  
 ## Releases
-* (Current) v1.0.0
+* [Latest] v1.0.0
 
 ## Hosting
-(read the LICENSE file before proceeding)
 * Requirements:
   * Node v14 (required for voice support and optional chaining support)
   * pnpm version 5 (most-efficient) [or npm version 6 if you want]
@@ -46,9 +44,13 @@ BOT_TOKEN=<put your bot token here>
    ```
    npm install package.json
    ```
-
-* Step 6: Start the bot
+* Step 6: windows-build-tools
+Some packages require a package called `windows-build-tools` to work properly. Without this, some packages might not install correctly or will outright fail. To install this package, open an administrative command prompt or powershell window and type `npm i -g windows-build-tools` and it should install. 
+* Step 7: Start the bot
 ```
 node index.js
 ```
 and you're done!
+
+## License
+This project uses the [AGPL 3 License](https://raw.githubusercontent.com/MGPlayzYT/mgplayz-bot/main/LICENSE).
