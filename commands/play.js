@@ -9,7 +9,7 @@ const ytdl = require("ytdl-core");
 const { MessageEmbed } = Discord;
 const ytsr = require("ytsr");
 const ytpl = require("ytpl");
-const COOKIE = "your-cookie-here"
+
 module.exports = {
   name: "play",
   description:
@@ -38,6 +38,7 @@ module.exports = {
           `${x} **You must be in the same voice channel as the bot is in.**`
         );
     }
+    let song;
     const { CONNECT, SPEAK } = channel
       .permissionsFor(message.guild.me)
       .serialize();
@@ -52,18 +53,77 @@ module.exports = {
         `${x} **You can't run this command while defened.**`
       );
     // if the user provided a playlist as the argument
-    if (args.join(" ").includes("=list")) {
+    if (
+      args
+        .join(" ")
+        .match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)/)
+    ) {
       const url = args.join(" ");
-      const playlist = await ytpl(url.split("list=")[1]);
-      const vids = playlist.items;
+      let playlist = await ytpl(url.split("list=")[1]);
 
-      for (const songInfo of vids)
-        await module.exports.queueSong(songInfo, message);
+      let playlistInfo = {
+        title: playlist.title,
+        url: playlist.url,
+        vidsTotal: playlist.estimated_items,
+        requestBy: `<@!${message.member.user.id}>`
+      };
+
+      for (const item of playlist.items) {
+        const songInfo = await ytdl.getBasicInfo(item.id, {
+          requestOptions: {
+            headers: { cookie: COOKIE },
+            maxRedirects: 4,
+            maxRetries: 3
+          }
+        });
+        song = {
+          title: songInfo.videoDetails.title,
+          url: songInfo.videoDetails.video_url,
+          duration: songInfo.videoDetails.lengthSeconds,
+          thumbnail: songInfo.videoDetails.thumbnails.pop().url, // fetch the highest thumbnail quality
+          author: songInfo.videoDetails.ownerChannelName,
+          voteSkips: [],
+          type: "ytdl",
+          live: songInfo.videoDetails.isLiveContent,
+          requestBy: `<@!${message.member.user.id}>`
+        };
+        return await module.exports.queueSong(message, song);
+      }
     }
     // if the user provided a youtube video link as the argument
     else if (ytdl.validateURL(args.join(" "))) {
-      const songInfo = await ytdl.getBasicInfo(args.join(" "));
-      return await module.exports.queueSong(songInfo, message);
+      let songInfo = await ytdl.getBasicInfo(args.join(" "), {
+        requestOptions: {
+          headers: { cookie: COOKIE },
+          maxRedirects: 4,
+          maxRetries: 3
+        }
+      });
+      song = {
+        title: songInfo.videoDetails.title,
+        url: songInfo.videoDetails.video_url,
+        duration: songInfo.videoDetails.lengthSeconds,
+        thumbnail: songInfo.videoDetails.thumbnails.pop().url, // fetch the highest thumbnail quality
+        author: songInfo.videoDetails.ownerChannelName,
+        voteSkips: [],
+        type: "ytdl",
+        live: songInfo.videoDetails.isLiveContent,
+        requestBy: `<@!${message.member.user.id}>`
+      };
+      if (serverQueue) {
+        const queueVideoEmbed = new MessageEmbed()
+          .setThumbnail(song.thumbnail)
+          .setColor("RANDOM")
+          .setAuthor("Added to queue", message.author.displayAvatarURL())
+          .setTitle(song.title)
+          .setURL(song.url)
+          .addField("Author", song.author)
+          .addField("Duration", toHHMMSS(song.duration))
+          .addField("Queue Position", serverQueue.songs.indexOf(song) + 1)
+          .addField("Requested by", song.requestBy);
+        message.channel.send(queueVideoEmbed);
+      }
+      return await module.exports.queueSong(message, song);
     } else {
       // if the user provided a song name as the argument
       message.channel.send("**🔍 Searching for `" + args.join(" ") + "`...**");
@@ -95,7 +155,7 @@ module.exports = {
           })
           .on("collect", async m => {
             var videoIndex = parseInt(m.content);
-            if (m.content < 1 || m.content > 10)
+            if (m.content < 1 || m.content > results.length)
               return message.channel.send(
                 `<:Error:665142091906809877> **Please use a number between 1 and 10.**`
               );
@@ -111,10 +171,41 @@ module.exports = {
               return message.channel.send(
                 `<:Error:665142091906809877> **Arguments must be a number.**`
               );
-            const songInfo = await ytdl.getBasicInfo(
-              results[videoIndex - 1].url.split("?v=")[1]
+            let songInfo = await ytdl.getBasicInfo(
+              results[videoIndex - 1].url.split("?v=")[1],
+              {
+                requestOptions: {
+                  headers: { cookie: COOKIE },
+                  maxRedirects: 4,
+                  maxRetries: 3
+                }
+              }
             );
-            return await module.exports.queueSong(songInfo, message);
+            song = {
+              title: songInfo.videoDetails.title,
+              url: songInfo.videoDetails.video_url,
+              duration: songInfo.videoDetails.lengthSeconds,
+              thumbnail: songInfo.videoDetails.thumbnails.pop().url, // fetch the highest thumbnail quality
+              author: songInfo.videoDetails.ownerChannelName,
+              voteSkips: [],
+              type: "ytdl",
+              live: songInfo.videoDetails.isLiveContent,
+              requestBy: `<@!${message.member.user.id}>`
+            };
+            if (serverQueue) {
+              const queueVideoEmbed = new MessageEmbed()
+                .setThumbnail(song.thumbnail)
+                .setColor("RANDOM")
+                .setAuthor("Added to queue", message.author.displayAvatarURL())
+                .setTitle(song.title)
+                .setURL(song.url)
+                .addField("Author", song.author)
+                .addField("Duration", toHHMMSS(song.duration))
+                .addField("Queue Position", serverQueue.songs.indexOf(song) + 1)
+                .addField("Requested by", song.requestBy);
+              message.channel.send(queueVideoEmbed);
+            }
+            return await module.exports.queueSong(message, song);
           });
       } catch (error) {
         console.error(error);
@@ -124,21 +215,11 @@ module.exports = {
       }
     }
   },
-  queueSong: async (songInfo, message) => {
+  queueSong: async (message, song) => {
     const { queue } = message.client;
     const channel = message.member.voice.channel;
     const x = message.client.emojis.cache.find(f => f.name === "Error");
     const serverQueue = queue.get(message.guild.id);
-    const song = {
-      title: songInfo.videoDetails.title,
-      url: songInfo.videoDetails.video_url,
-      duration: songInfo.videoDetails.lengthSeconds,
-      thumbnail: songInfo.videoDetails.thumbnail.thumbnails.pop().url, // fetch the highest thumbnail quality
-      author: songInfo.videoDetails.ownerChannelName,
-      voteSkips: [],
-      live: songInfo.videoDetails.isLiveContent,
-      requestBy: `<@!${message.member.user.id}>`
-    };
     if (song.live === true)
       return message.channel.send(`${x} **Live videos cannot be played.**`);
     if (song.duration > 17999)
@@ -155,7 +236,7 @@ module.exports = {
         playing: true,
         looping: false
       };
-      
+
       try {
         const connection = await channel.join();
         queueContruct.connection = connection;
@@ -168,20 +249,7 @@ module.exports = {
           `${x} **An error occurred while trying to connect to the voice channel!**`
         );
       }
-    } else {
-      serverQueue.songs.push(song);
-      const queueVideoEmbed = new MessageEmbed()
-        .setThumbnail(song.thumbnail)
-        .setColor("RANDOM")
-        .setAuthor("Added to queue", message.author.displayAvatarURL())
-        .setTitle(song.title)
-        .setURL(song.url)
-        .addField("Author", song.author)
-        .addField("Duration", toHHMMSS(song.duration))
-        .addField("Queue Position", serverQueue.songs.indexOf(song) + 1)
-        .addField("Requested by", song.requestBy);
-      return message.channel.send(queueVideoEmbed);
-    }
+    } else serverQueue.songs.push(song);
   },
   play: async (message, song) => {
     const { queue } = message.client;
@@ -199,22 +267,22 @@ module.exports = {
       dlChunkSize: 0,
       quality: "highestaudio",
       requestOptions: {
-          maxRedirects: 4, 
-          maxRetries: 3 
-        }
-    }).on("error", (err) => {
-       console.error(err);
-       serverQueue.voiceChannel.leave();
+        maxRedirects: 4,
+        maxRetries: 3
+      }
+    }).on("error", err => {
+      console.error(err);
+      serverQueue.voiceChannel.leave();
     });
 
-    ServerQueue.connection
+    serverQueue.connection
       .play(mainStream, { bitrate: "auto" })
       .on("finish", () => {
-         if (serverQueue.looping !== "song") {
-           if (serverQueue.looping === "queue")
-             serverQueue.songs.push(serverQueue.songs[0]);
+        if (serverQueue.looping !== "song") {
+          if (serverQueue.looping === "queue")
+            serverQueue.songs.push(serverQueue.songs[0]);
           else serverQueue.songs.shift();
-         }
+        }
         module.exports.play(message, serverQueue.songs[0]);
       })
       .on("error", error => {
@@ -224,8 +292,8 @@ module.exports = {
         return message.channel.send(
           `${x} **Oops, an error occured while trying to execute that operation.**`
         );
-      });
-     .setVolume(serverQueue.volume / 100);
+      })
+      .setVolume(serverQueue.volume / 100);
     const videoEmbed = new MessageEmbed()
       .setThumbnail(song.thumbnail)
       .setColor("RANDOM")
