@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const {
   noBotPerms,
   decodeEntities,
-  toHHMMSS
+  toHHMMSS,
 } = require("../modules/botModule.js");
 const ytdl = require("ytdl-core");
 const { MessageEmbed } = Discord;
@@ -21,12 +21,15 @@ module.exports = {
   cooldown: 5,
   disableable: false,
   execute: async (message, args) => {
+    let song;
     const serverQueue = message.client.queue.get(message.guild.id);
     const channel = message.member.voice.channel;
     const youtube = message.client.emojis.cache.find(
-      emoji => emoji.name === "youtube"
+      (emoji) => emoji.name === "youtube"
     );
-    const x = message.client.emojis.cache.find(emoji => emoji.name === "Error");
+    const x = message.client.emojis.cache.find(
+      (emoji) => emoji.name === "Error"
+    );
     if (!serverQueue) {
       if (!channel)
         return message.channel.send(
@@ -38,7 +41,6 @@ module.exports = {
           `${x} **You must be in the same voice channel as the bot is in.**`
         );
     }
-    let song;
     const { CONNECT, SPEAK } = channel
       .permissionsFor(message.guild.me)
       .serialize();
@@ -65,16 +67,15 @@ module.exports = {
         title: playlist.title,
         url: playlist.url,
         vidsTotal: playlist.estimated_items,
-        requestBy: `<@!${message.member.user.id}>`
+        requestBy: `<@!${message.member.user.id}>`,
       };
 
       for (const item of playlist.items) {
         const songInfo = await ytdl.getBasicInfo(item.id, {
           requestOptions: {
-            headers: { cookie: COOKIE },
             maxRedirects: 4,
-            maxRetries: 3
-          }
+            maxRetries: 3,
+          },
         });
         song = {
           title: songInfo.videoDetails.title,
@@ -85,7 +86,7 @@ module.exports = {
           voteSkips: [],
           type: "ytdl",
           live: songInfo.videoDetails.isLiveContent,
-          requestBy: `<@!${message.member.user.id}>`
+          requestBy: `<@!${message.member.user.id}>`,
         };
         return await module.exports.queueSong(message, song);
       }
@@ -94,10 +95,9 @@ module.exports = {
     else if (ytdl.validateURL(args.join(" "))) {
       let songInfo = await ytdl.getBasicInfo(args.join(" "), {
         requestOptions: {
-          headers: { cookie: COOKIE },
           maxRedirects: 4,
-          maxRetries: 3
-        }
+          maxRetries: 3,
+        },
       });
       song = {
         title: songInfo.videoDetails.title,
@@ -108,7 +108,7 @@ module.exports = {
         voteSkips: [],
         type: "ytdl",
         live: songInfo.videoDetails.isLiveContent,
-        requestBy: `<@!${message.member.user.id}>`
+        requestBy: `<@!${message.member.user.id}>`,
       };
       if (serverQueue) {
         const queueVideoEmbed = new MessageEmbed()
@@ -128,7 +128,7 @@ module.exports = {
       // if the user provided a song name as the argument
       message.channel.send("**🔍 Searching for `" + args.join(" ") + "`...**");
       const result = (await ytsr(args.join(" "), { limit: 10 })).items.filter(
-        a => a.type === "video"
+        (a) => a.type === "video"
       );
       const results = result;
       if (!results.length)
@@ -149,11 +149,11 @@ module.exports = {
       var msg2 = await message.channel.send(msg);
       try {
         message.channel
-          .createMessageCollector(x => x.author.id === message.author.id, {
+          .createMessageCollector((x) => x.author.id === message.author.id, {
             max: 1,
-            time: 15000
+            time: 15000,
           })
-          .on("collect", async m => {
+          .on("collect", async (m) => {
             var videoIndex = parseInt(m.content);
             if (m.content < 1 || m.content > results.length)
               return message.channel.send(
@@ -175,10 +175,9 @@ module.exports = {
               results[videoIndex - 1].url.split("?v=")[1],
               {
                 requestOptions: {
-                  headers: { cookie: COOKIE },
                   maxRedirects: 4,
-                  maxRetries: 3
-                }
+                  maxRetries: 3,
+                },
               }
             );
             song = {
@@ -190,7 +189,7 @@ module.exports = {
               voteSkips: [],
               type: "ytdl",
               live: songInfo.videoDetails.isLiveContent,
-              requestBy: `<@!${message.member.user.id}>`
+              requestBy: `<@!${message.member.user.id}>`,
             };
             if (serverQueue) {
               const queueVideoEmbed = new MessageEmbed()
@@ -218,7 +217,7 @@ module.exports = {
   queueSong: async (message, song) => {
     const { queue } = message.client;
     const channel = message.member.voice.channel;
-    const x = message.client.emojis.cache.find(f => f.name === "Error");
+    const x = message.client.emojis.cache.find((f) => f.name === "Error");
     const serverQueue = queue.get(message.guild.id);
     if (song.live === true)
       return message.channel.send(`${x} **Live videos cannot be played.**`);
@@ -234,7 +233,7 @@ module.exports = {
         songs: [song],
         volume: 50,
         playing: true,
-        looping: false
+        looping: false,
       };
 
       try {
@@ -255,7 +254,9 @@ module.exports = {
     const { queue } = message.client;
     const guild = message.guild;
     const serverQueue = queue.get(message.guild.id);
-    const x = message.client.emojis.cache.find(emoji => emoji.name === "Error");
+    const x = message.client.emojis.cache.find(
+      (emoji) => emoji.name === "Error"
+    );
 
     if (!song) {
       queue.delete(guild.id);
@@ -268,9 +269,9 @@ module.exports = {
       quality: "highestaudio",
       requestOptions: {
         maxRedirects: 4,
-        maxRetries: 3
-      }
-    }).on("error", err => {
+        maxRetries: 3,
+      },
+    }).on("error", (err) => {
       console.error(err);
       serverQueue.voiceChannel.leave();
     });
@@ -285,7 +286,7 @@ module.exports = {
         }
         module.exports.play(message, serverQueue.songs[0]);
       })
-      .on("error", error => {
+      .on("error", (error) => {
         console.error(error);
         serverQueue.voiceChannel.leave();
         queue.delete(guild.id);
@@ -305,5 +306,5 @@ module.exports = {
       .addField("Requested by", song.requestBy);
     if (serverQueue.looping) return;
     message.channel.send(videoEmbed);
-  }
+  },
 };
