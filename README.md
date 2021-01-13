@@ -8,7 +8,8 @@
 * You are always free to contribute!
 
 ## Releases
-* [Latest] v1.0.0
+* v1.0.0
+* [Latest] v1.1.0
 
 ## Hosting
 * Requirements:
