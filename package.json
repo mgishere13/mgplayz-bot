@@ -1,26 +1,19 @@
 {
   "name": "mgplayz-bot",
+  "description": "A discord.js bot with basic, and intuitive commands!",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "repository": {},
-  "keywords": [
-    "discord-bot",
-    "discord.js"
-  ],
-  "author": {
-    "name": "MGPlayzYT#4565",
-    "discord_user_id": "488692154164576256"
-  },
-  "co-owner": [
-    {
-      "name": "Nick Chan#0001",
-      "discord_user_id": "570634232465063967"
-    }
-  ],
+  "author": "MGPlayzYT [MGPlayz YT#4565 on Discord]",
+  "bugs": "https://github.com/MGPlayzYT/mgplayz-bot/issues",
+  "repository": "https://github.com/MGPlayzYT",
+  "co-owner": "Nick Chan [Nick Chan#0001 on Discord]",
   "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "@keyv/sqlite": "^2.0.2",
@@ -45,8 +38,5 @@
     "ytpl": "^2.0.4",
     "ytsr": "^3.2.1",
     "zlib-sync": "^0.1.7"
-  },
-  "engines": {
-    "node": ">=14"
   }
 }
