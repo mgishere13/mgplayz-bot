@@ -276,7 +276,7 @@ module.exports = {
       serverQueue.voiceChannel.leave();
     });
 
-    serverQueue.connection
+    const dispatcher = serverQueue.connection
       .play(mainStream, { bitrate: "auto" })
       .on("finish", () => {
         if (serverQueue.looping !== "song") {
@@ -293,8 +293,8 @@ module.exports = {
         return message.channel.send(
           `${x} **Oops, an error occured while trying to execute that operation.**`
         );
-      })
-      .setVolume(serverQueue.volume / 100);
+      });
+      dispatcher.setVolume(serverQueue.volume / 100);
     const videoEmbed = new MessageEmbed()
       .setThumbnail(song.thumbnail)
       .setColor("RANDOM")
