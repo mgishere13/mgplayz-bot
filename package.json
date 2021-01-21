@@ -1,7 +1,7 @@
 {
   "name": "mgplayz-bot",
   "description": "A discord.js bot with basic, and intuitive commands!",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
