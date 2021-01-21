@@ -12,7 +12,7 @@
   "co-owner": "Nick Chan [Nick Chan#0001 on Discord]",
   "license": "AGPL-3.0",
   "engines": {
-    "node": ">=14"
+    "node": "14.x"
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
@@ -34,9 +34,9 @@
     "querystring": "^0.2.0",
     "serialize-javascript": "^5.0.1",
     "utf-8-validate": "^5.0.3",
-    "ytdl-core": "^4.4.3",
+    "ytdl-core": "^4.4.4",
     "ytpl": "^2.0.4",
-    "ytsr": "^3.2.1",
+    "ytsr": "^3.2.2",
     "zlib-sync": "^0.1.7"
   }
 }
