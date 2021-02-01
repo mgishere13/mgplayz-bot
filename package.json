@@ -34,9 +34,9 @@
     "querystring": "^0.2.0",
     "serialize-javascript": "^5.0.1",
     "utf-8-validate": "^5.0.3",
-    "ytdl-core": "^4.4.4",
+    "ytdl-core": "^4.4.5",
     "ytpl": "^2.0.4",
-    "ytsr": "^3.2.2",
+    "ytsr": "^3.2.4",
     "zlib-sync": "^0.1.7"
   }
 }
