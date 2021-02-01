@@ -13,11 +13,11 @@
 
 ## Hosting
 * Requirements:
-  * Node v14 (required for voice support and optional chaining support)
+  * Node v14
   * Latest version of npm
-  * Git
-  * nano
-  * Atleast 120MB of free memory
+  * [Git](https://git-scm.com/download/win)
+  * [nano](https://www.nano-editor.org/download.php)
+  * Atleast 100MB of free memory
   * Atleast 500MB of free disk space
 
 * Before you begin (IMPORTANT)
@@ -27,16 +27,16 @@
 ```
 git clone https://github.com/MGPlayzYT/mgplayz-bot <custom folder name>
 ```
-* Step 2: 
+* Step 2: cd to your folder path
 ```
 cd <your-custom-folder-name>
 ```
-* Step 3:
+* Step 3: Rename files using `mv`
 ```
 mv .env.example .env
 mv config.js.example config.js
 ```
-* Step 4: Change the contents of your .env file
+* Step 4: Change the contents of your `.env` file
 ```
 BOT_TOKEN=<put your bot token here>
 ```
@@ -44,11 +44,12 @@ BOT_TOKEN=<put your bot token here>
    ```
    npm install package.json
    ```
-* Step 7: Start the bot
+* Step 6: Start the bot
    ```
    node index.js
    ```
-and you're done!
+
+- If you see something like `Shard 0 ready!` on your logs, you're done!
 
 ## License
 This project uses the [AGPL 3 License](https://raw.githubusercontent.com/MGPlayzYT/mgplayz-bot/main/LICENSE).
