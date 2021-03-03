@@ -8,6 +8,7 @@ const moment = require("moment");
 module.exports = {
   name: "memberinfo",
   aliases: ["member-info"],
+  notDisableable: false,
   description: "Shows information of a server member.",
   usage: "[username/id]",
   cooldown: 2,
@@ -17,27 +18,38 @@ module.exports = {
     const idle = client.emojis.cache.find(emoji => emoji.name === "idle");
     const dnd = client.emojis.cache.find(emoji => emoji.name === "dnd");
     const offline = client.emojis.cache.find(emoji => emoji.name === "offline");
-    const x = client.emojis.cache.find(emoji => emoji.name === "Error");
-    let member;
+    const x = message.client.emojis.cache.get("665142091906809877")
+    let memberCache;
     if (args[0]) {
-      member = await findMember(message, args.join(" ")).catch(error => {
-        member = message.member;
+      memberCache = await findMember(message, args.join(" ")).catch(error => {
+        memberCache = message.member;
       });
-    } else member = message.member;
-    const embed = new MessageEmbed()
-      .setTitle(":busts_in_silhouette:  Member Information")
-      .setColor(member.displayHexColor)
-      .setDescription(member)
-      .addField(
-        "Registered",
-        moment.utc(member.user.createdAt).format("ddd, DD MMM YYYY LT"),
-        true
-      ) //.toLocaleString("en-US", {timeZone: "America/New_York"}))
-      .addField(
-        "Joined",
-        moment.utc(member.joinedAt).format("ddd, DD MMM YYYY LT"),
-        true
-      ); //.toLocaleString("en-US", {timezone: "America/New_York"}))
+    } else memberCache = message.member;
+    let member;
+    if (!memberCache) member = message.member;
+    else member = memberCache;
+    const embed = new MessageEmbed();
+    embed.setTitle(":busts_in_silhouette:  Member Information");
+    embed.setColor(member.displayHexColor);
+    embed.setDescription(member);
+    embed.addField(
+      "Registered",
+      `${moment
+        .utc(member.user.createdAt)
+        .format("ddd, DD MMM YYYY")} at ${moment
+        .utc(member.user.createdAt)
+        .format("LT")}`,
+      true
+    );
+    embed.addField(
+      "Joined",
+      `${moment
+        .utc(member.joinedAt)
+        .format("ddd, DD MMM YYYY")} at ${moment
+        .utc(member.joinedAt)
+        .format("LT")}`,
+      true
+    );
     if (member.roles.highest)
       embed.addField("Highest Role", member.roles.highest, true);
     if (member.roles.hoist)
@@ -49,19 +61,22 @@ module.exports = {
     embed.setColor("RANDOM");
     embed.setTimestamp();
     try {
-      if (member.presence.status === "online")
-        member.presence.status = `${online} Online`;
-      else if (member.presence.status === "idle")
-        member.presence.status = `${idle} Idle`;
+      let status;
+      if (member.presence.status === "online") status = `${online} Online`;
+      else if (member.presence.status === "idle") status = `${idle} Idle`;
       else if (member.presence.status === "dnd")
-        member.presence.status = `${dnd} Do Not Disturb`;
+        status = `${dnd} Do Not Disturb`;
       else if (member.presence.status === "offline")
-        member.presence.status = `${offline} Offline`;
-      embed.addField("Status", member.presence.status, true);
-      if (member.presence.game) {
-        if (member.presence.game.name == "Custom Status")
-          member.presence.game.name = member.presence.game.state;
-        embed.addField("Playing", member.presence.game.name, true);
+        status = `${offline} Offline`;
+      embed.addField("Status", status, true);
+      if (member.presence.activities) {
+        let gameState;
+        if (member.presence.activities[0].type === 'CUSTOM_STATUS') {
+          if (member.presence.activities[0].emoji)
+            gameState = `${member.presence.activities[0].emoji.name} ${member.presence.activities[0].state}`;
+          else gameState = member.presence.activities[0].state;
+        } else gameState = member.presence.activities[0].name;
+        embed.addField("Playing", gameState, true);
       }
     } catch (error) {}
     message.channel.send(embed);
